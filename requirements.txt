@@ -1,0 +1,6 @@
+[
+  "おはよう",
+  "こんばんは",
+  "こんにちは",
+  "Twitter URL: https://twitter.com/home"
+]
