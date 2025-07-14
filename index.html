@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>AIっぽいチャット拡張版</title>
+  <style>
+    body { font-family: "Arial", sans-serif; padding: 20px; }
+    #result { margin-top: 10px; font-weight: bold; }
+    button.feedback { margin: 5px; }
+  </style>
+  <script>
+    async function sendAnswer() {
+      const formData = new FormData(document.getElementById("answerForm"));
+      await fetch("/submit", { method: "POST", body: formData });
+      alert("回答が送信されました！");
+    }
+
+    async function askQuestion() {
+      const formData = new FormData(document.getElementById("questionForm"));
+      const res = await fetch("/ask", { method: "POST", body: formData });
+      const data = await res.json();
+      document.getElementById("result").innerText = data.response;
+      document.getElementById("feedbackButtons").style.display = "block";
+    }
+
+    async function sendFeedback(rating) {
+      const formData = new FormData();
+      formData.append("rating", rating);
+      await fetch("/feedback", { method: "POST", body: formData });
+      alert("フィードバックありがとうございます！");
+    }
+  </script>
+</head>
+<body>
+  <h2>📝 回答フォーム</h2>
+  <form id="answerForm" onsubmit="event.preventDefault(); sendAnswer();">
+    <input type="text" name="new_answer" placeholder="A.回答を入力">
+    <button type="submit">送信</button>
+  </form>
+
+  <h2>❓ 質問フォーム</h2>
+  <form id="questionForm" onsubmit="event.preventDefault(); askQuestion();">
+    <input type="text" name="question" placeholder="質問を入力">
+    <button type="submit">質問する</button>
+  </form>
+
+  <h3>🗨️ 回答結果:</h3>
+  <div id="result"></div>
+  <div id="feedbackButtons" style="display:none;">
+    <button class="feedback" onclick="sendFeedback('good')">👍</button>
+    <button class="feedback" onclick="sendFeedback('bad')">👎</button>
+  </div>
+</body>
+</html>
